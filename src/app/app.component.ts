@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
-import { ToDoItem } from '../model/todoItem';
-import { TodoList } from '../model/TodoList';
+import { Component, Input } from '@angular/core';
+import { ToDoItem } from './model/todoItem';
+import { TodoList } from './model/TodoList';
+import { TaskServices } from './Services/task-services.service';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { StatusEnum } from './model/StatusEnum';
 
 @Component({
   selector: 'app-root',
@@ -10,19 +13,39 @@ import { TodoList } from '../model/TodoList';
 export class AppComponent {
   title = 'todo';
 
-  private list = new TodoList('Bob', [
-    new ToDoItem('Go for run', true),
-    new ToDoItem('Get flowers'),
-    new ToDoItem('Collect tickets'),
-  ]);
+  constructor(private dbService: NgxIndexedDBService) {}
 
-  get username(): string {
-    return this.list.user;
-  }
+
+  public TaskServices = new TaskServices(this.dbService);
+
   get itemCount(): number {
-    return this.list.todoItems.filter((item) => !item.complete).length;
+    return this.Items.length;
   }
-  get Items(): readonly ToDoItem[]{
-    return this.list.todoItems;
+  get Items(): readonly ToDoItem[] {
+    return this.TaskServices.InitialTask().filter(
+      (item) => this.showComplete || !item.complete
+    );
+  }
+
+  addItem(newTitle: string, newDesc: string) {
+    if (newTitle != '') {
+      var newTask = new ToDoItem(newTitle, newDesc, false, StatusEnum.ToDo);
+      this.TaskServices.AddItem(newTask);
+    }
+  }
+  showComplete: boolean = false;
+
+  UpdateComplete(item: ToDoItem) {
+    this.TaskServices.UpdateTaskCompleted(item);
+  }
+
+  getEnumKeyByEnumValue(myEnum, enumValue)  {
+    let keys = Object.keys(myEnum).filter(x => myEnum[x] == enumValue);
+    return keys.length > 0 ? keys[0] : null;
+  }
+  public onDropDownSelected(item: ToDoItem, event: string) {
+    item.status = StatusEnum[this.getEnumKeyByEnumValue(StatusEnum, event)];
+    this.TaskServices.UpdateTaskCompleted(item);
+
   }
 }

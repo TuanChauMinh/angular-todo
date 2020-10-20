@@ -9,7 +9,7 @@ export class TodoList {
     return this.todoItems;
   }
 
-  addItem(task: string){
-    this.todoItems.push(new ToDoItem(task));
-  }
+  // addItem(task: string){
+  //   this.todoItems.push(new ToDoItem(task));
+  // }
 }
