@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { StatusEnum, StatusTypeLabelMapping } from "../../model/StatusEnum";
 
 @Component({
@@ -16,7 +15,7 @@ export class StatusDropDownComponent implements OnInit {
   public taskStatus = Object.values(StatusEnum);
   public statusLabelMapping = StatusTypeLabelMapping;
 
-  constructor(private fb:FormBuilder) {
+  constructor() {
   }
 
   ngOnInit(): void {

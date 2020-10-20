@@ -1,3 +1,3 @@
-<select class="form-control" formControlName="dropdownControl" id="status-select" #mySelect (change) = "dropdownChange.emit(mySelect.value)">
+<select class="form-control" id="status-select" #mySelect (change) = "dropdownChange.emit(mySelect.value)">
   <option *ngFor="let item of taskStatus"  [value]="item">{{statusLabelMapping[item]}}</option>
 </select>
